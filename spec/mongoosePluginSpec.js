@@ -15,12 +15,17 @@ let Author =  mongoose.model('Author', AuthorSchema);
 let PostSchema = new mongoose.Schema({
   title: String,
   date: Date,
-  body : String,
+  body : {
+    type: String,
+    text: true,
+  },
   author: {
     type: mongoose.Schema.ObjectId,
     ref: 'Author'
   }
 });
+
+PostSchema.index({body: 'text'});
 
 PostSchema.plugin(mongooseCursorPaginate);
 
@@ -67,4 +72,37 @@ describe('mongoose plugin', (it) => {
     t.is(data.hasOwnProperty('next'), true);
     t.is(data.hasOwnProperty('hasNext'), true);
   });
+
+  it('return find results', async function(t) {
+    let data = await Post.paginate({
+      query: {title: 'Post #99'},
+    });
+    t.is(data.results.length, 1);
+  });
+
+  it('return aggregate results', async function(t) {
+    let data = await Author.paginateFN({
+      aggregation: [
+        {
+          $lookup: {
+            from: 'posts',
+            localField: '_id',
+            foreignField: 'author',
+            as: 'posts',
+          }
+        },
+      ],
+    });
+    t.is(data.results.length, 1);
+    t.is(Array.isArray(data.results[0].posts), true);
+    t.is(data.results[0].posts.length, 100);
+  });
+
+  it('return search results', async function(t) {
+    let data = await Post.paginate({
+      search: '99',
+    });
+    t.is(data.results.length, 1);
+  });
+
 });

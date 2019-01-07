@@ -1,5 +1,7 @@
 
 const find = require('./find');
+const search = require('./search');
+const aggregate = require('./aggregate');
 const _ = require('underscore');
 
 /**
@@ -22,7 +24,9 @@ module.exports = function (schema, options) {
     }
 
     param = _.extend({}, param);
-        
+
+    if (param.aggregation) return aggregate(this.collection, param);
+    if (param.search) return search(this.collection, param.search, param);
     return find(this.collection, param);
   };
 
