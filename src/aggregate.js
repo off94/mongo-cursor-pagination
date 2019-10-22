@@ -44,7 +44,7 @@ module.exports = async function aggregate(collection, params) {
   let index = _.findIndex(params.aggregation, ((step) => !_.isEmpty(step.$match)));
 
   if (index < 0) {
-    params.aggregation.unshift({ $match: cursorQuery });
+    params.aggregation.push({ $match: cursorQuery });
     index = 0;
   } else {
     const matchStep = params.aggregation[index];
@@ -56,8 +56,10 @@ module.exports = async function aggregate(collection, params) {
     };
   }
 
-  params.aggregation.splice(index + 1, 0, { $sort });
-  params.aggregation.splice(index + 2, 0, { $limit: params.limit + 1 });
+  if (!_.some(params.aggregation, (step) => !!step.$sort)) {
+    params.aggregation.push({ $sort });
+  }
+  params.aggregation.push({ $limit: params.limit + 1 });
 
   // Support both the native 'mongodb' driver and 'mongoist'. See:
   // https://www.npmjs.com/package/mongoist#cursor-operations

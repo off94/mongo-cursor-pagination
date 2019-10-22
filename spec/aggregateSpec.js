@@ -572,7 +572,7 @@ describe('aggregate', (it) => {
       });
 
       t.is(res.results.length, 1);
-      t.deepEqual(res.results[0].planets, ['mars', 'jupiter', 'saturn']);
+      t.deepEqual(res.results[0].planets, ['venus', 'mars', 'jupiter']);
       t.true(res.hasNext);
     });
   });
