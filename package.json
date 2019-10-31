@@ -1,6 +1,6 @@
 {
-  "name": "mongo-cursor-pagination",
-  "version": "7.1.0",
+  "name": "mongo-cursor-pagination-fix",
+  "version": "7.1.2",
   "description": "Make it easy to return cursor-paginated results from a Mongo collection",
   "main": "index.js",
   "files": [
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mixmaxhq/mongo-cursor-pagination.git"
+    "url": "git+https://github.com/off94/mongo-cursor-pagination.git"
   },
   "keywords": [
     "mongo",
@@ -27,7 +27,8 @@
     "database",
     "fulltext",
     "search",
-    "find"
+    "find",
+    "aggregation"
   ],
   "author": "Brad Vogel <brad@mixmax.com> (https://mixmax.com/)",
   "license": "MIT",
@@ -56,7 +57,7 @@
     "mongodb": "^2.2.11",
     "mongodb-memory-server": "^1.6.1",
     "mongoist": "1.4.3",
-    "mongoose": "5.0.15"
+    "mongoose": "^5.7.7"
   },
   "engines": {
     "node": ">= 6.9.1"

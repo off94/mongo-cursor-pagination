@@ -1,10 +1,10 @@
-# mongo-cursor-pagination
-[![Build Status](https://travis-ci.org/mixmaxhq/mongo-cursor-pagination.svg?branch=master)](https://travis-ci.org/mixmaxhq/mongo-cursor-pagination)
+# mongo-cursor-pagination-fix
 
 This module aids in implementing "cursor-based" pagination using Mongo range queries or relevancy-based search results. __This module is currently used in production for the [Mixmax API](https://developer.mixmax.com) to return millions of results a day__.
 
 ### New
  * [Now Supports Mongoose](https://github.com/mixmaxhq/mongo-cursor-pagination#with-mongoose)
+ * [Fix](#fix) include support for aggregation and search functions to use with Mongoose
 
 ## Background
 
@@ -26,7 +26,7 @@ Here are some examples of cursor-based APIs:
 
 ## Install
 
-`npm install mongo-cursor-pagination --save`
+`npm install mongo-cursor-pagination-fix --save`
 
 ## Usage
 
@@ -133,11 +133,27 @@ const counter = mongoose.model('counter',
 counterSchema);
 
 // default function is "paginate"
-counter.paginate({ limit : 10 })
+counter.paginate({ limit : 10, query: myQuery })
+.then((result) => {
+  console.log(result);
+});
+```
+
+#fix
+```js
+// what this fix does
+
+// if you want to paginate an aggregation, use option 'aggregation' instead of 'query'
+counter.paginate({ limit : 10, aggregation: myPipelineAggregation })
 .then((result) => {
   console.log(result);
 });
 
+// if you want to paginate a search, use option 'search' instead of 'query'
+counter.paginate({ limit : 10, search: mySearch })
+.then((result) => {
+  console.log(result);
+});
 
 ```
 
@@ -153,8 +169,7 @@ const counterSchema = new mongoose.Schema({ counter: Number });
 
 counterSchema.plugin(MongoPaging.mongoosePlugin, { name: 'paginateFN' });
 
-const counter = mongoose.model('counter',
-counterSchema);
+const counter = mongoose.model('counter', counterSchema);
 
 // now you can call the custom named function
 
